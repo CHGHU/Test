@@ -1,4 +1,8 @@
-package com.app.demo;
+package com.app.util;
+
+import lombok.extern.slf4j.Slf4j;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -6,9 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import lombok.extern.slf4j.Slf4j;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 @Slf4j
 public class ImageBase64Converter {
