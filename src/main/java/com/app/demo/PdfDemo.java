@@ -75,7 +75,7 @@ public class PdfDemo {
             content = "专利信息";
             PdfUtil.writeParagraphToPdf(document, 17, BaseColor.DARK_GRAY, content);
 
-            PdfUtil.writeTableToPdf(document, null, null);
+            //PdfUtil.writeTableToPdf(document, null, null);
 
             DefaultCategoryDataset categoryDataset = PdfChartsUtil.categoryDataset(null, null);
             JFreeChart lineChart = PdfChartsUtil.lineChart("title", "xName", "yName", categoryDataset);

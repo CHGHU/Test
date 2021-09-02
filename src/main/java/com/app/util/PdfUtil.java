@@ -5,7 +5,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactoryImp;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Jpeg;
 import com.itextpdf.text.PageSize;
@@ -81,9 +81,7 @@ public class PdfUtil {
 
     public static void writeParagraphToPdf(Document document, int fontSize, BaseColor fontColor, String content) throws DocumentException {
         // 定义字体
-        FontFactoryImp ffi = new FontFactoryImp();
-        ffi.registerDirectories();
-        Font font = ffi.getFont("黑体", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, fontSize, Font.UNDEFINED, fontColor);
+        Font font = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H", BaseFont.EMBEDDED, 10, Font.UNDEFINED, BaseColor.GRAY);
 
         // 增加一个段落
         Paragraph paragraph = new Paragraph(content, font);
@@ -91,11 +89,14 @@ public class PdfUtil {
         document.add(paragraph);
     }
 
-    public static void writeTableToPdf(Document document, int tableWidths[], List<Map<String, String>> datas) throws DocumentException {
+    public static void writeTableToPdf(Document document, float[] columnWidths, List<Map<String, String>> datas, boolean titleFlag, boolean indexFlag) throws DocumentException {
+
+        // 长宽
+        int rowNum = datas.size();
+        int columnNum = columnWidths.length;
+
         // 定义字体
-        FontFactoryImp ffi = new FontFactoryImp();
-        ffi.registerDirectories();
-        Font font = ffi.getFont("黑体", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 10, Font.UNDEFINED, BaseColor.GRAY);
+        Font font = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H", BaseFont.EMBEDDED, 10, Font.UNDEFINED, BaseColor.GRAY);
 
         // 创建表格，5列的表格
         PdfPTable table = new PdfPTable(8);
@@ -104,24 +105,28 @@ public class PdfUtil {
         table.setHorizontalAlignment(Element.ALIGN_CENTER);
 
         // 表格宽度
-        int headWidths[] = {5, 10, 10, 13, 10, 10, 21, 21};
-        table.setWidths(headWidths);
+        table.setWidths(columnWidths);
         table.setWidthPercentage(100);
 
         // 添加单元格
         PdfPCell cell;
         String content;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < columnNum; j++) {
 
-                if (i == 0) {
-                    content = j == 0 ? "序号" : "测试标题-" + (j + 1);
-                    cell = new PdfPCell(new Phrase(content, font));
-                    cell.setBackgroundColor(LIGHT_GREEN);
-
+                if (indexFlag) {
+                    if (j == 0) {
+                        content = i == 0 ? "序号" : String.valueOf(titleFlag ? i : i + 1);
+                    } else {
+                        content = datas.get(i).get(j - 1);
+                    }
                 } else {
-                    content = j == 0 ? String.valueOf(i) : "测试单元格标题-" + i + "-" + (j + 1);
-                    cell = new PdfPCell(new Phrase(content, font));
+                    content = datas.get(i).get(j);
+                }
+
+                cell = new PdfPCell(new Phrase(content, font));
+                if (titleFlag && i == 0) {
+                    cell.setBackgroundColor(LIGHT_GREEN);
                 }
 
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
