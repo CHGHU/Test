@@ -1,11 +1,12 @@
 package com.app.demo;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -16,7 +17,11 @@ public class FutureDemo {
         long start = System.currentTimeMillis();
         log.info("开始时间: {}", start);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1,
+                new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
+
         Future future = executor.submit(() -> {
             try {
                 log.info("任务时停开始");
