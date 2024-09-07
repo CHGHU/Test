@@ -30,7 +30,7 @@ public class FileTemplate {
 
     public String uploadFile(String filePath, String data) {
         MultipartBodyBuilder multipartBodyBuilder = new MultipartBodyBuilder();
-        multipartBodyBuilder.part("file", new FileSystemResource(Paths.get(filePath)));
+        multipartBodyBuilder.part("file", new FileSystemResource(filePath));
         multipartBodyBuilder.part("data", data);
 
         MultiValueMap<String, HttpEntity<?>> requestEntity = multipartBodyBuilder.build();
